@@ -4,9 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import logo from '/store-svgrepo-com.svg';
 
 
-function NavigationBar({ isActive, setIsActive }) {
+function NavigationBar() {
 
-	
+
 
 	return (
 		<Navbar expand="lg" className="bg-body-secondary mb-3 w-100">

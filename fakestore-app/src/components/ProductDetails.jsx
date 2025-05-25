@@ -11,7 +11,7 @@ function ProductDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isDeleted, setIsDeleted] = useState(false);
-    const setInterval(() => )
+    // const setInterval(() => )
 
     {/* 
         Upon any detected changes in the state of 'id', make an HTTP GET request to FakeStoreAPI 
