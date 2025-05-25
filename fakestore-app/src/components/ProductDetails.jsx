@@ -60,7 +60,6 @@ function ProductDetails() {
     const updateProductData = () => {
         axios.put(`https://fakestoreapi.com/products/${id}`, product)
             .then(response => {
-                console.log(response)
                 if (response.status == 200) {
                     setError('')
                     setUpdateSuccessful(true); // track successful put
