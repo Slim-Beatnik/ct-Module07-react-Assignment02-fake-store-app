@@ -81,7 +81,7 @@ function AddProduct() {
                     <Form.Control type="text" placeholder="Enter a image url" name="image" value={formData.image} onChange={handleChange} required />
                 </Form.Group>
 
-                <Button variant="primary" type="submit">
+                <Button variant="outline-secondary" type="submit">
                     Submit
                 </Button>
 

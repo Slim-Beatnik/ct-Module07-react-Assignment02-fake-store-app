@@ -6,6 +6,10 @@
   background-color: #52455633;
 }
 
+#superContainer {
+  margin-bottom: 140px; 
+}
+
 /* NAVBAR */
 .storeLogo {  
   min-width: 5rem;
@@ -33,7 +37,7 @@
 
 /* HOME */
 .first3rd {
-  height: 66vh;
+  height: calc(66vh + 90px);
 }
 
 .homeText {
@@ -55,6 +59,12 @@
   justify-content: end;
 }
 
+/* PRODUCT DETAILS */
+.prodDescTA {
+  field-sizing: content;
+}
+
+/* FOOTER */
 footer {
   background-color: #ace;
   min-height: 90px;

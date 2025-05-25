@@ -238,6 +238,11 @@ This was faster and easier to format to for smooth operation and appearance with
 
 The Axios get, instead of the built-in fetch method made for an easier to read API grab, and the addition of react-router-dom made the navigation visually trackable.
 
+useNavigate, useParam and useInterval were all new to me.
+This was kinda fun. On to the next
+
+--bonus, add to cart button added -- no functionality.
+
 
     <br />
     <a href="https://github.com/Slim-Beatnik/repo_name"><strong>Explore the docs »</strong></a>
