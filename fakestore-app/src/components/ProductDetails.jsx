@@ -60,7 +60,8 @@ function ProductDetails() {
     const updateProductData = () => {
         axios.put(`https://fakestoreapi.com/products/${id}`, product)
             .then(response => {
-                if (response.statusText == 'OK') {
+                console.log(response)
+                if (response.status == 200) {
                     setError('')
                     setUpdateSuccessful(true); // track successful put
                     setEditCancelled(false); // revert editCancelled state
@@ -87,7 +88,6 @@ function ProductDetails() {
     
     if (isDeleted) return <><p>Product deleted successfully!</p><br /><p>Redirecting to home page<br />{ tminus }</p></>
     if (loading) return <p>Loading products...</p>;
-    if (error) return <p>{error}</p>;
 
     
 
@@ -112,13 +112,13 @@ function ProductDetails() {
             {error && <Alert variant="danger" dismissible>{error}</Alert>}
             <Card className="product-card">
                 <Card.Img className="product-image" variant="top" src={product.image} alt={ product.title } />
-                { isEditing ? <input name="image" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.image } alt={ product.title } require /> : <></> }
+                { isEditing ? <input name="image" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.image } alt={ product.title } /> : <></> }
                 <Card.Body>
                     <Card.Title>
                         { !isEditing ?
                             (product.title
                         ) : (
-                            <>{ product.title }<br /><input name="title" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.title } require /> </>
+                            <>{ product.title }<br /><input name="title" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.title } /> </>
                         )}
                     </Card.Title>
                     <Card.Text>
@@ -132,7 +132,7 @@ function ProductDetails() {
                         ${ !isEditing ?
                             (product.price
                         ) : (
-                            <>{ product.price }<br /><input name="price" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.price } require /> </>
+                            <>{ product.price }<br /><input name="price" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.price } /> </>
                         )}
                     </Card.Text>
                 </Card.Body>
