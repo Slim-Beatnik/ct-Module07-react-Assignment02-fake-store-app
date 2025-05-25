@@ -1,7 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import logo from '/store-svgrepo-com.svg';
+import logo from 'store-svgrepo-com.svg';
 
 
 function NavigationBar() {
