@@ -31,8 +31,14 @@ function ProductDetails() {
     const delProdById = () => {
         axios.delete(`https://fakestoreapi.com/products/${ id }`)
             .then(response => {
-                response.statusText == 'OK' ? setIsDeleted(true) : setError('bad request');
-                setTimerStart(true); // start the timer for redirect
+                console.log(response);
+                if (response.statusText == 'OK' || response.status == 200) {
+                    setIsDeleted(true)
+                    setTimerStart(true) // start the timer for redirect
+                } else {
+                    (setError('bad request'))
+                }
+                //setTimerStart(true); // start the timer for redirect
             })
             .catch(error => console.log(error))
             .finally(() => {
@@ -62,7 +68,7 @@ function ProductDetails() {
     const updateProductData = () => {
         axios.put(`https://fakestoreapi.com/products/${id}`, product)
             .then(response => {
-                if (response.status == 200) {
+                if (response.status == 200 || response.statusText == 'OK') {
                     setError('')
                     setUpdateSuccessful(true); // track successful put
                     setEditCancelled(false); // revert editCancelled state
