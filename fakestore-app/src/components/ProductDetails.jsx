@@ -30,11 +30,13 @@ function ProductDetails() {
 
     const delProdById = () => {
         axios.delete(`https://fakestoreapi.com/products/${ id }`)
-            .then(response => response.statusText == 'OK' ? setIsDeleted(true) : setError('bad request'))
+            .then(response => {
+                response.statusText == 'OK' ? setIsDeleted(true) : setError('bad request');
+                setTimerStart(true); // start the timer for redirect
+            })
             .catch(error => console.log(error))
             .finally(() => {
                 setShowDeletePrompt(false)
-                setTimerStart(true)
             })
     }
 
@@ -107,7 +109,7 @@ function ProductDetails() {
                 </Modal.Footer>
             </Modal>
         
-            {updateSuccessful && <Alert variant="success" dismissible>{product.title} has been updated successfully!</Alert>}
+            {updateSuccessful && <Alert variant="success" dismissible onDismiss={ () => setUpdateSuccessful(false) }>{product.title} has been updated successfully!</Alert>}
             {error && <Alert variant="danger" dismissible>{error}</Alert>}
             <Card className="product-card">
                 <Card.Img className="product-image" variant="top" src={product.image} alt={ product.title } />

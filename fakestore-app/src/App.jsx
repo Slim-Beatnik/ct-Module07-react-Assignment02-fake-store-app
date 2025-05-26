@@ -20,6 +20,7 @@ function App() {
           <Route path="/addproduct" element={<AddProduct />} />
         </Routes>
       </Router>
+      <div id="spacer"></div>
       <Footer />
     </div>
   )
