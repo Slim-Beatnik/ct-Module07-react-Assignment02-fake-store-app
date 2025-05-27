@@ -61,11 +61,6 @@
   justify-content: end;
 }
 
-/* PRODUCT DETAILS */
-.prodDescTA {
-  field-sizing: content;
-}
-
 /* FOOTER */
 footer {
   background-color: #ace;

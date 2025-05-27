@@ -25,18 +25,22 @@ function ProductDetails() {
 
     // HELPER FUNCTIONS
     const handleChange = (e) => {
-        setProduct(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        // Maintain product object structure of Number for product.price
+        let newValue = 0;
+        if (e.target.name === 'price') {
+            e.target.value.match(/[.]/) ? newValue = parseFloat(e.target.value) : newValue = parseInt(e.target.value);
+        }
+        setProduct(prev => ({ ...prev, [e.target.name]: (newValue || e.target.value) }));
     }
 
     const delProdById = () => {
         axios.delete(`https://fakestoreapi.com/products/${ id }`)
             .then(response => {
-                console.log(response);
                 if (response.statusText == 'OK' || response.status == 200) {
                     setIsDeleted(true)
                     setTimerStart(true) // start the timer for redirect
                 } else {
-                    (setError('bad request'))
+                    setError('bad request')
                 }
                 //setTimerStart(true); // start the timer for redirect
             })
@@ -45,25 +49,6 @@ function ProductDetails() {
                 setShowDeletePrompt(false)
             })
     }
-
-    {/* 
-        Upon any detected changes in the state of 'id', make an HTTP GET request to FakeStoreAPI 
-        to retrieve the product details for that particular product id.
-        Then, save the result in the 'product' variable. 
-    */}
-    useEffect(() => {
-        axios.get(`https://fakestoreapi.com/products/${id}`)
-            .then((response) => {
-                setProduct(response.data);
-                setLoading(false);
-                setIsEditing(false);
-                setEditCancelled(false);
-            })
-            .catch((error) => {
-                setError("Failed to load product details" + error.message);
-                setLoading(false);
-            });
-    }, [id, editCancelled]);
 
     const updateProductData = () => {
         axios.put(`https://fakestoreapi.com/products/${id}`, product)
@@ -82,11 +67,31 @@ function ProductDetails() {
             .finally(() => setIsEditing(false));
     }
 
+    /* 
+        Upon any detected changes in the state of 'id', make an HTTP GET request to FakeStoreAPI 
+        to retrieve the product details for that particular product id.
+        Then, save the result in the 'product' variable. 
+    */
+    useEffect(() => {
+        axios.get(`https://fakestoreapi.com/products/${id}`)
+            .then((response) => {
+                setProduct(response.data);
+                setLoading(false);
+                setIsEditing(false); // revert isEditing
+                setEditCancelled(false); // revert  editCancelled
+            })
+            .catch((error) => {
+                setError("Failed to load product details" + error.message);
+                setLoading(false);
+            });
+    }, [id, editCancelled]);
+
+    // countdown and redirect to home page -- triggers in delProdById() after delete confirmed successful
     useEffect(() => {
         if (tminus == 0) navigate("/products");
         if (timerStart) {
             const timer = setInterval(() => {
-                setTminus(tminus => tminus - 1);
+                setTminus(t => t - 1);
             }, 1000);
             return () => clearInterval(timer);
         }
@@ -115,31 +120,46 @@ function ProductDetails() {
                 </Modal.Footer>
             </Modal>
         
-            {updateSuccessful && <Alert variant="success" dismissible onDismiss={ () => setUpdateSuccessful(false) }>{product.title} has been updated successfully!</Alert>}
-            {error && <Alert variant="danger" dismissible>{error}</Alert>}
+            { updateSuccessful && <Alert variant="success" dismissible onClose={ () => setUpdateSuccessful(false) }>{product.title} has been updated successfully!</Alert> }
+            { error && <Alert variant="danger" dismissible>{error}</Alert> }
             <Card className="product-card">
                 <Card.Img className="product-image" variant="top" src={product.image} alt={ product.title } />
                 { isEditing ? <input name="image" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.image } alt={ product.title } /> : <></> }
                 <Card.Body>
                     <Card.Title>
+                        {/* Negative conditional to demonstrate initial view */}
                         { !isEditing ?
-                            (product.title
+                            (  product.title
                         ) : (
-                            <>{ product.title }<br /><input name="title" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.title } /> </>
+                            <>
+                                { preview && <>{ product.title }</> }
+                                { !preview && <input name="title" onChange={ handleChange } value= { product.title } /> }
+                            </>
                         )}
                     </Card.Title>
                     <Card.Text>
                         { !isEditing ?
-                            (product.description
+                            (  product.description
                         ) : (
-                            <>{ product.description }<br /><textarea name="description" className={ preview ? "d-none" : 'prodDescTA' } onChange={ handleChange } value={ product.description } /> </>
+                            /*
+                                preview toggles textarea visibility and inversely toggles description text element
+                                Not willing to use another ternary for readability
+                            */
+                            <>
+                                { preview && <>{ product.description }</> }
+                                { !preview && <textarea name="description" onChange={ handleChange } value={ product.description } style={{ fieldSizing: 'content' }}/> }
+                            </>
                         )}
                     </Card.Text>
                     <Card.Text>
-                        ${ !isEditing ?
-                            (product.price
+                        { !isEditing ?
+                            ( <>${`${ Number.isInteger(product.price) ? product.price : product.price.toFixed(2) }`}</>
                         ) : (
-                            <>{ product.price }<br /><input name="price" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.price } /> </>
+                            // preview toggles input visibility and inversely toggles price text element
+                            <>
+                                { preview && <>${`${ Number.isInteger(product.price) ? product.price : product.price.toFixed(2) }`}<br /></> }
+                                { !preview && <input name="price" className={ preview ? "d-none" : '' } onChange={ handleChange } value={ product.price } /> }
+                            </>
                         )}
                     </Card.Text>
                 </Card.Body>
