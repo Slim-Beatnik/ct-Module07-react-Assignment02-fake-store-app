@@ -10,17 +10,23 @@ import Modal from 'react-bootstrap/Modal';
 
 function ProductDetails() {
     const { id } = useParams();
+    // initial loading states
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    // delete related states
     const [showDeletePrompt, setShowDeletePrompt] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
     const [tminus, setTminus] = useState(10);
     const [timerStart, setTimerStart] = useState(false);
+    // edit related states
     const [isEditing, setIsEditing] = useState(false);
     const [preview, setPreview] = useState(false);
     const [editCancelled, setEditCancelled] = useState(false);
     const [updateSuccessful, setUpdateSuccessful] = useState(false);
+    const [priceError, setPriceError] = useState('');
+
+    // redirect helper variable after setIsDeleted(true)
     const navigate = useNavigate();
 
     // HELPER FUNCTIONS
@@ -28,6 +34,11 @@ function ProductDetails() {
         // Maintain product object structure of Number for product.price
         let newValue = 0;
         if (e.target.name === 'price') {
+            // if value has non-digit or decimal characters
+            if (e.target.value.match(/[^\d.]/)) {
+                setPriceError('Invalid price input. Only numbers and decimal points accepted');
+                return;
+            }
             e.target.value.match(/[.]/) ? newValue = parseFloat(e.target.value) : newValue = parseInt(e.target.value);
         }
         setProduct(prev => ({ ...prev, [e.target.name]: (newValue || e.target.value) }));
@@ -120,7 +131,7 @@ function ProductDetails() {
                 </Modal.Footer>
             </Modal>
         
-            { updateSuccessful && <Alert variant="success" dismissible onClose={ () => setUpdateSuccessful(false) }>{product.title} has been updated successfully!</Alert> }
+            { updateSuccessful && <Alert variant="success" onClose={ () => setUpdateSuccessful(false) } dismissible>{product.title} has been updated successfully!</Alert> }
             { error && <Alert variant="danger" dismissible>{error}</Alert> }
             <Card className="product-card">
                 <Card.Img className="product-image" variant="top" src={product.image} alt={ product.title } />
@@ -133,7 +144,7 @@ function ProductDetails() {
                         ) : (
                             <>
                                 { preview && <>{ product.title }</> }
-                                { !preview && <input name="title" onChange={ handleChange } value= { product.title } /> }
+                                { !preview && <textarea name="title" onChange={ handleChange } value= { product.title } style={{ fieldSizing: 'content' }}/> }
                             </>
                         )}
                     </Card.Title>
@@ -151,6 +162,7 @@ function ProductDetails() {
                             </>
                         )}
                     </Card.Text>
+                    { isEditing && !preview && <Alert variant="warning" dismissible>Enter your number and add decimal in the place you want it.</Alert> }
                     <Card.Text>
                         { !isEditing ?
                             ( <>${`${ Number.isInteger(product.price) ? product.price : product.price.toFixed(2) }`}</>
@@ -176,7 +188,7 @@ function ProductDetails() {
                     <Button variant="outline-danger" className="fw-bold font-monospace m-3 col" onClick={ () => setEditCancelled(true) }>Cancel</Button>
                 </Row>
             )}
-            
+            { priceError && <Alert variant="warning" onClose={ () => setPriceError('') } dismissible>{ priceError}</Alert> }
             </Card>
         </Container>
     )
