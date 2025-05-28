@@ -135,7 +135,7 @@ function ProductDetails() {
             { error && <Alert variant="danger" dismissible>{error}</Alert> }
             <Card className="product-card">
                 <Card.Img className="product-image" variant="top" src={product.image} alt={ product.title } />
-                { isEditing ? <input name="image" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.image } alt={ product.title } /> : <></> }
+                { isEditing ? <input name="image" type="url" className={ preview ? "d-none" : '' } onChange={ handleChange } value= { product.image } alt={ product.title } /> : <></> }
                 <Card.Body>
                     <Card.Title>
                         {/* Negative conditional to demonstrate initial view */}
